@@ -1,5 +1,5 @@
 """
-User enters url of site with the filters 'software developer' and 'Baltimore, MD' already applied to the url. Then the program selects the string 'job' within the url, within the 'href' with the 'a' tag. 
+User enters url of site with the filters already applied to the url. 
 
 'a' tag -> 'href' attribute -> 'job' string
 
