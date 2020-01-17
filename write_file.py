@@ -9,7 +9,6 @@ Write to a file that's title is the name of the website ie. 'indeed', 'ziprecrui
 Append the contents of each 'get' request to the same file ie. 'indeed', 'monster', etc.
 """
 
-import requests
 import re
 from requests import get
 from requests.exceptions import RequestException
@@ -58,77 +57,59 @@ def log_error(e):
 
 
 if __name__ == '__main__':
-       
-    #user enters url of site with the desired filters already applied to the url
-    url = input('Enter url of job site you like to scrape: ')
-    
-    #connects to page and save contents of page
+
+    #user enters the url of the site with the desired filters already applied to url
+    url = input('Enter the url of job site you like to scrape: ')
+
+    #connects to page and saves contents of page
     page = simple_get(url)
 
-    #beautiful soup transforms a html document into a tree of python objects
+    #beautiful soup transforms a html doc into a tree of python objects
     soup = BeautifulSoup(page, 'html.parser')
 
-    #isolates websites host name
-    webpage_split = url.split('.')
+    #isolates websites company name 
+    url_split = url.split('.')
 
-    #selects websites host name
-    webpage = webpage_split[1]
-    
-    with open('jobs_'+webpage+'.html', 'w') as _file:
-       
-        #create two vars of same value to use for separate purposes
-        host_page = webpage
+    #selects company name
+    company_name = url_split[1]
 
-        #create a list to store links
+    with open('jobs_'+company_name+'.html', 'w') as _file:
+
+        #create two vars of same value to use for separate purposes 
+        company = company_name
+
+        #create a list to store links 
         links = []
 
-        #finds all links with the string 'job' in them
+        #finds all 'a' tags with the string 'job' embedded inside 
         for tag in soup.find_all('a'):
+            
+            #try:
+                #if string 'job' in tag
+                #if '/' in tag.text:
 
-            #if string 'job' in tag
-            if 'job' in tag.text:
+            #if absolute path doesn't exist
+            if 'https' not in tag['href']:
 
+                print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
+
+                #create absolute path 
+                absolute_path = 'https://www.'+company+'.com'+tag['href']
+
+                #append list of links
+                links.append(absolute_path)
+
+
+            #if absolute path does exist 
+            else:
+
+                print('Found the URL: ', tag['href'])
+
+                #append list of links
+                links.append(tag['href'])
+
+            #except RequestException as e:
+                #log_error('Error during requests to {0} : {1}'.format(url, str(e)))
                 
-                #if absolute path doesn't exist
-                if 'www' not in tag['href']:
-
-                    print('Found the URL:','https://www.'+host_page+'.com'+tag['href'])
-
-                    #create absolute path
-                    absolute_path = 'https://www.'+host_page+'.com'+tag['href']
-                    
-                    #append list of links
-                    links.append(absolute_path)
-
-                    """
-                    #connects to page and saves content of page
-                    page = simple_get(absolute_path)
-
-                    #create soup object
-                    soup = BeautifulSoup(page, 'html.parser')
-
-                    #saves content of page to file
-                    _file.write(str(soup))
-                    """
-
-                #if absoute path exists
-                else:
-                
-                    print('Found the URL:',tag['href'])
-
-                    #append list of links
-                    links.append(tag['href'])
-
-                    """
-                    #connects to page and saves content of page
-                    page = str(simple_get(tag['href']))
-
-                    #create soup object
-                    soup = BeautifulSoup(page, 'html.parser')
-
-                    #saves content of page to file
-                    _file.write(str(soup))
-                    """
-
             _file.write(str(links))
         _file.close()
