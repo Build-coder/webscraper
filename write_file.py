@@ -130,5 +130,5 @@ if __name__ == '__main__':
                     _file.write(str(soup))
                     """
 
-        _file.write(str(links))
+            _file.write(str(links))
         _file.close()
