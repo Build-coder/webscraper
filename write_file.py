@@ -1,14 +1,3 @@
-"""
-User enters url of site with the filters already applied to the url. 
-
-'a' tag -> 'href' attribute -> 'job' string
-
-Do a 'get' request with every webpage that's url contains the string 'job'.
-
-Write to a file that's title is the name of the website ie. 'indeed', 'ziprecruiter', etc.
-Append the contents of each 'get' request to the same file ie. 'indeed', 'monster', etc.
-"""
-
 import re
 from requests import get
 from requests.exceptions import RequestException
@@ -81,25 +70,26 @@ if __name__ == '__main__':
         #create a list to store links 
         links = []
 
-        #finds all 'a' tags with the string 'job' embedded inside 
-        for tag in soup.find_all('a'):
-            
-            #try:
-                #if string 'job' in tag
-                #if '/' in tag.text:
+        #finds all 'a' tags with link inside 
+        for tag in soup.find_all('a', href=True):
 
-            #if absolute path doesn't exist
-            if 'https' not in tag['href']:
+            try:
+                #if absolute path doesn't exist
+                if 'http' or 'https' not in tag['href']:
 
-                print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
+                    print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
 
-                #create absolute path 
-                absolute_path = 'https://www.'+company+'.com'+tag['href']
+                    #create absolute path 
+                    absolute_path = 'https://www.'+company+'.com'+tag['href']
 
-                #append list of links
-                links.append(absolute_path)
+                    #append list of links
+                    links.append(absolute_path)
 
-
+                    
+            except RequestException as e:
+                log_error('Error during requests to {0} : {1}'.format(url, str(e)))
+                    
+                    
             #if absolute path does exist 
             else:
 
