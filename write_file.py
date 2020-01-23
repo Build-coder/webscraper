@@ -73,10 +73,11 @@ if __name__ == '__main__':
         #finds all 'a' tags with link inside 
         for tag in soup.find_all('a', href=True):
 
-            try:
-                #if absolute path doesn't exist
-                if 'http' or 'https' not in tag['href']:
-
+            #if absolute path doesn't exist
+            if 'http' or 'https' not in tag['href']:
+    
+                try:            
+            
                     print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
 
                     #create absolute path 
@@ -84,10 +85,9 @@ if __name__ == '__main__':
 
                     #append list of links
                     links.append(absolute_path)
-
                     
-            except RequestException as e:
-                log_error('Error during requests to {0} : {1}'.format(url, str(e)))
+                except RequestException as e:
+                    log_error('Error during requests to {0} : {1}'.format(url, str(e)))
                     
                     
             #if absolute path does exist 
