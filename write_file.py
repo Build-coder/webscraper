@@ -75,20 +75,15 @@ if __name__ == '__main__':
 
             #if absolute path doesn't exist
             if 'http' or 'https' not in tag['href']:
-    
-                try:            
-            
-                    print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
+                
+                print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
 
-                    #create absolute path 
-                    absolute_path = 'https://www.'+company+'.com'+tag['href']
+                #create absolute path 
+                absolute_path = 'https://www.'+company+'.com'+tag['href']
 
-                    #append list of links
-                    links.append(absolute_path)
-                    
-                except RequestException as e:
-                    log_error('Error during requests to {0} : {1}'.format(url, str(e)))
-                    
+                #append list of links
+                links.append(absolute_path)
+                                        
                     
             #if absolute path does exist 
             else:
