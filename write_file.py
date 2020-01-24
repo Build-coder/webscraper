@@ -1,4 +1,5 @@
 import re
+import pdb
 from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
@@ -45,7 +46,65 @@ def log_error(e):
     print()
 
 
-if __name__ == '__main__':
+def find_onclick_links(company, soup):
+
+    links = []
+
+    #finds all 'a' tags with the string 'job' embedded inside 
+    for tag in soup.find_all('a', href=True, onclick=True):
+
+        #if absolute path doesn't exist
+        if 'http' or 'https' not in tag['href']:
+
+            print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
+
+            #create absolute path 
+            absolute_path = 'https://www.'+company+'.com'+tag['href']
+
+            #append list of links
+            links.append(absolute_path)
+
+        #if absolute path does exist 
+        else:
+
+            print('Found the URL: ', tag['href'])
+
+            #append list of links
+            links.append(tag['href'])
+
+    return links
+
+
+def find_job_links(company, soup):
+
+    links = []
+
+    #finds all 'a' tags with the string 'job' embedded inside 
+    for tag in soup.find_all('a', re.compile('job'), href=True):
+
+        #if absolute path doesn't exist
+        if 'http' or 'https' not in tag['href']:
+
+            print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
+
+            #create absolute path 
+            absolute_path = 'https://www.'+company+'.com'+tag['href']
+
+            #append list of links
+            links.append(absolute_path)
+
+        #if absolute path does exist 
+        else:
+
+            print('Found the URL: ', tag['href'])
+
+            #append list of links
+            links.append(tag['href'])
+
+    return links
+
+
+def write_file():
 
     #user enters the url of the site with the desired filters already applied to url
     url = input('Enter the url of job site you like to scrape: ')
@@ -67,34 +126,29 @@ if __name__ == '__main__':
         #create two vars of same value to use for separate purposes 
         company = company_name
 
-        #create a list to store links 
-        links = []
+        
+        if company == 'indeed' or 'monster':
 
-        #finds all 'a' tags with link inside 
-        for tag in soup.find_all('a', href=True):
+            #find 'a' tags with onclick attributes
+            links = find_onclick_links(company, soup)
 
-            #if absolute path doesn't exist
-            if 'http' or 'https' not in tag['href']:
-                
-                print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
-
-                #create absolute path 
-                absolute_path = 'https://www.'+company+'.com'+tag['href']
-
-                #append list of links
-                links.append(absolute_path)
-                                        
-                    
-            #if absolute path does exist 
-            else:
-
-                print('Found the URL: ', tag['href'])
-
-                #append list of links
-                links.append(tag['href'])
-
-            #except RequestException as e:
-                #log_error('Error during requests to {0} : {1}'.format(url, str(e)))
-                
             _file.write(str(links))
-        _file.close()
+    
+        else:
+
+            #find 'a' tages with string 'job'
+            links = find_job_links(company, soup)
+
+            _file.write(str(links))
+
+
+    _file.close()
+
+    return company_name
+
+
+if __name__ == '__main__':
+
+    company_name = write_file()
+    print('\nWrote file to jobs_'+company_name+'.html')
+    print()
