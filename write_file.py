@@ -54,7 +54,7 @@ def find_onclick_links(company, soup):
     for tag in soup.find_all('a', href=True, onclick=True):
 
         #if absolute path doesn't exist
-        if 'http' or 'https' not in tag['href']:
+        if 'http' and 'https' not in tag['href']:
 
             print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
 
@@ -83,7 +83,7 @@ def find_job_links(company, soup):
     for tag in soup.find_all('a', re.compile('job'), href=True):
 
         #if absolute path doesn't exist
-        if 'http' or 'https' not in tag['href']:
+        if 'http' and 'https' not in tag['href']:
 
             print('Found the URL: ','https://www.'+company+'.com'+tag['href'])
 
