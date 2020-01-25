@@ -50,7 +50,7 @@ def find_onclick_links(company, soup):
 
     links = []
 
-    #finds all 'a' tags with the string 'job' embedded inside 
+    #finds all 'a' tags with the attribute 'onclick' inside
     for tag in soup.find_all('a', href=True, onclick=True):
 
         #if absolute path doesn't exist
